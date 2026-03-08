@@ -1,20 +1,22 @@
 # ARK_PERCEPTION_CV_TASK_2.2
+ARK Perception Team – Computer Vision Tasks
+
+This repository contains my solutions for the ARK Perception Team Selection Tasks (Computer Vision).
+The objective of these tasks is to apply image processing and computer vision techniques to solve practical problems involving noise removal and geometric feature detection.
+
+The tasks were implemented using Python, OpenCV, NumPy, and Jupyter Notebook.
+
+Tasks Implemented
 Task 2.2 – Noise Filtering
 Objective
 
-The goal of this task is to remove high-frequency salt noise from corrupted images while preserving the important features of the image such as edges and structures.
-
-Input Images
-
-iron_man_noisy.jpg
-
-scenary_noise.jpg
+The goal of this task is to restore corrupted images affected by high-frequency salt noise (random white pixels) while preserving important visual features such as edges and line structures.
 
 Approach
 
-The following image processing pipeline was used:
+The following image processing pipeline was implemented:
 
-Load the noisy image using OpenCV
+Load the noisy images using OpenCV
 
 Convert the image to grayscale
 
@@ -22,16 +24,74 @@ Apply Median Filtering to remove salt noise
 
 Use Morphological Opening to remove remaining artifacts
 
-Save the processed clean image
+Save the processed image
 
-Key Concepts
+Key Concepts Used
 
 Salt-and-pepper noise removal
 
-Median filtering
+Median filtering (non-linear filter)
 
-Morphological image processing
+Morphological operations (erosion and dilation)
 
-Output
+Result
 
-The final images show significant noise reduction while preserving the original line structure.
+The processed images show:
+
+Significant reduction of noise
+
+Preservation of line structures
+
+Improved visual clarity
+
+Task 2.3 – Medial Axis Detection of Moving Objects
+Objective
+
+The objective of this task is to detect the medial axis (central skeletal line) of a moving surgical tool in a video sequence.
+
+The medial axis represents the geometric center of an object and is useful for analyzing its orientation and structural properties.
+
+Processing Pipeline
+
+The following computer vision pipeline was implemented:
+
+Frame Extraction
+Extract frames from the input video.
+
+Background Subtraction
+Separate the moving object from the static background.
+
+Morphological Cleaning
+Remove noise and fill small gaps using erosion and dilation.
+
+Edge Detection
+Detect object boundaries using Sobel derivatives.
+
+Custom Hough Line Transform
+Detect straight edges of the tool using a manually implemented Hough Transform.
+
+Medial Axis Computation
+Compute the central axis between the detected edges.
+
+Visualization
+Overlay the detected medial axis on the original video frames.
+
+Important Constraint
+
+The Hough Transform was implemented from scratch without using OpenCV’s built-in Hough transform functions.
+
+Result
+
+The algorithm successfully detects the edges of the tool and computes the central skeletal axis, which is visualized on the video frames.
+
+Technologies Used
+
+Python
+
+OpenCV
+
+NumPy
+
+Matplotlib
+
+Jupyter Notebook

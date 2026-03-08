@@ -1,4 +1,5 @@
-# ARK_PERCEPTION_CV_TASK_2.2
+# ARK_PERCEPTION_CV_TASK
+
 ARK Perception Team – Computer Vision Tasks
 
 This repository contains my solutions for the ARK Perception Team Selection Tasks (Computer Vision).

@@ -1,0 +1,55 @@
+function [line_angle, stop_flag] = processImage(img)
+    % Inputs: 
+    % img - RGB image matrix (Expected: 120x160x3)
+    % Outputs:
+    % line_angle - Steering command (double)
+    % stop_flag - 1 to stop/land, 0 to keep flying (double)
+
+    % 1. Image Dimensions Check
+    % For 120x160, rows=120, cols=160
+    [rows, cols, ~] = size(img);
+
+    % 2. Region of Interest (ROI) Selection
+    % Focus on the bottom 40 pixels (row 80 to 120) 
+    % This ignores the drone's body and focuses on the track immediately ahead.
+    roi_start = 80; 
+    roi_img = img(roi_start:end, :, :);
+
+    % 3. Extract Color Channels & Binarization
+    % Targeted for the Red track specified in the ARK perception task
+    R = roi_img(:, :, 1);
+    G = roi_img(:, :, 2);
+    B = roi_img(:, :, 3);
+
+    % Masking for Red: High R, lower G and B to filter out floor noise
+    red_mask = (R > 110) & (R > G + 25) & (R > B + 25);
+
+    % 4. Stop Logic: "Check red pixel coming or not"
+    num_red_pixels = sum(red_mask(:));
+    
+    % If fewer than 20 pixels are red, the line is gone -> STOP
+    % If red pixels occupy a massive area (>1200), it's the landing circle -> STOP
+    if num_red_pixels < 20 || num_red_pixels > 1200
+        stop_flag = 1;
+        line_angle = 0; 
+    else
+        stop_flag = 0;
+
+        % 5. Centroid Calculation
+        % Find the column (x) coordinates of all detected red pixels
+        [~, c] = find(red_mask);
+
+        % The horizontal center of the line is the average of these columns
+        x_centroid = mean(c);
+
+        % 6. Error and Angle Calculation (Center of 160px is 80)
+        x_center_frame = cols / 2; % 80
+        error = x_centroid - x_center_frame;
+
+        % Proportional Gain (Kp) 
+        % Maps pixel error (-80 to 80) to a manageable steering command
+        Kp = -0.007; 
+        
+        line_angle = Kp * error; 
+    end
+end
